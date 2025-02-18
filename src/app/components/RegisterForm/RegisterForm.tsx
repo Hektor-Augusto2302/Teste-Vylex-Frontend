@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { FormContainer, Title, Input, Button, ErrorText } from "@/styles/RegisterForm.styles";
+import { FirebaseError } from "firebase/app";
 
 export default function RegisterForm() {
     const { register } = useAuth();
@@ -35,11 +36,15 @@ export default function RegisterForm() {
 
         try {
             await register(formData.email, formData.password);
-        } catch (error: any) {
-            if (error.code === "auth/email-already-in-use") {
-                setError("Este e-mail já está em uso.");
+        } catch (error: unknown) {
+            if (error instanceof FirebaseError) {
+                if (error.code === "auth/email-already-in-use") {
+                    setError("Este e-mail já está em uso.");
+                } else {
+                    setError("Erro ao registrar. Tente novamente.");
+                }
             } else {
-                setError("Erro ao registrar. Tente novamente.");
+                setError("Erro desconhecido. Tente novamente.");
             }
         }
     };

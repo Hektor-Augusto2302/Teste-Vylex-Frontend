@@ -28,9 +28,10 @@ export const useAuth = () => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             setUser(userCredential.user);
-        } catch (error: any) {
-            console.error("Erro ao fazer login:", error);
-            throw error;
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error("Erro ao fazer login:", error.message);
+            }
         }
     };
 

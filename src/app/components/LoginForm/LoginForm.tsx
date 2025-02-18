@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { FormContainer, Title, Input, Button, ErrorText } from "@/styles/LoginForm.styles";
+import { FirebaseError } from "firebase/app";
 import Link from "next/link";
 
 export default function LoginForm() {
@@ -29,19 +30,23 @@ export default function LoginForm() {
     
         try {
             await login(formData.email, formData.password);
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
     
-            if (error.code === "auth/user-not-found") {
-                setError("Usuário não encontrado. Verifique o e-mail digitado.");
-            } else if (error.code === "auth/wrong-password") {
-                setError("Senha incorreta. Tente novamente.");
-            } else if (error.code === "auth/invalid-email") {
-                setError("E-mail inválido. Digite um e-mail válido.");
-            } else if (error.code === "auth/invalid-credential") {
-                setError("Credenciais inválidas. Verifique os dados e tente novamente.");
+            if (error instanceof FirebaseError) {
+                if (error.code === "auth/user-not-found") {
+                    setError("Usuário não encontrado. Verifique o e-mail digitado.");
+                } else if (error.code === "auth/wrong-password") {
+                    setError("Senha incorreta. Tente novamente.");
+                } else if (error.code === "auth/invalid-email") {
+                    setError("E-mail inválido. Digite um e-mail válido.");
+                } else if (error.code === "auth/invalid-credential") {
+                    setError("Credenciais inválidas. Verifique os dados e tente novamente.");
+                } else {
+                    setError("Erro ao fazer login. Tente novamente.");
+                }
             } else {
-                setError("Erro ao fazer login. Tente novamente.");
+                setError("Erro desconhecido. Tente novamente.");
             }
         }
     };
