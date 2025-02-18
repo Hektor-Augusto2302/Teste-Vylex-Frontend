@@ -59,4 +59,5 @@ export const ErrorText = styled.p`
     color: #f44336;
     font-size: 12px;
     margin-top: 8px;
+    text-align: center;
 `;

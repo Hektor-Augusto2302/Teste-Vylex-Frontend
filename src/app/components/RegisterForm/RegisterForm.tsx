@@ -20,15 +20,28 @@ export default function RegisterForm() {
         setError("");
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (formData.password.length < 6) {
+            setError("A senha deve ter pelo menos 6 caracteres.");
+            return;
+        }
 
         if (formData.password !== formData.confirmPassword) {
             setError("As senhas não coincidem!");
             return;
         }
 
-        register(formData.email, formData.password);
+        try {
+            await register(formData.email, formData.password);
+        } catch (error: any) {
+            if (error.code === "auth/email-already-in-use") {
+                setError("Este e-mail já está em uso.");
+            } else {
+                setError("Erro ao registrar. Tente novamente.");
+            }
+        }
     };
 
     return (

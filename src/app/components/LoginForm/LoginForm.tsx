@@ -21,16 +21,28 @@ export default function LoginForm() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+    
         if (!formData.email || !formData.password) {
             setError("Por favor, preencha todos os campos.");
             return;
         }
-
+    
         try {
             await login(formData.email, formData.password);
-        } catch {
-            setError("Erro ao buscar tarefas.");
+        } catch (error: any) {
+            console.error(error);
+    
+            if (error.code === "auth/user-not-found") {
+                setError("Usuário não encontrado. Verifique o e-mail digitado.");
+            } else if (error.code === "auth/wrong-password") {
+                setError("Senha incorreta. Tente novamente.");
+            } else if (error.code === "auth/invalid-email") {
+                setError("E-mail inválido. Digite um e-mail válido.");
+            } else if (error.code === "auth/invalid-credential") {
+                setError("Credenciais inválidas. Verifique os dados e tente novamente.");
+            } else {
+                setError("Erro ao fazer login. Tente novamente.");
+            }
         }
     };
 
