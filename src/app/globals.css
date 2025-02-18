@@ -2,20 +2,89 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+    --primary-bg: #121212;
+    --secondary-bg: #5c5454;
+    --text-color: #ffffff;
+    --border-color: #333;
+    --input-bg: #262626;
+    --input-border: #444;
+    --button-bg: #007bff; 
+    --button-hover: #0056b3;
+    
+    --error-text: #e74c3c;
+    --link-text: #3498db;
+    --link-hover: #2980b9;
+    --gray-400: #b0b0b0;
+    --gray-600: #777777;
+    --gray-700: #4d4d4d;
+    --green-500: #2ecc71;
+    --green-600: #27ae60;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    font-family: "Inter", sans-serif;
+}
+
+.navbar {
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+}
+
+.form-container {
+    @apply max-w-md mx-auto p-6 bg-gray-800 rounded-lg shadow-lg;
+}
+
+.input-field {
+    @apply w-full p-2 mb-4 bg-gray-700 text-white border border-gray-600 rounded;
+}
+
+.button {
+    @apply w-full bg-blue-500 hover:bg-blue-600 text-white p-2 rounded font-semibold;
+}
+
+.error-text {
+    color: var(--error-text);
+}
+
+.link {
+    color: var(--link-text);
+}
+
+.link:hover {
+    color: var(--link-hover);
+}
+
+.navbar a,
+.navbar button {
+    color: #ffffff;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar a:hover,
+.navbar button:hover {
+    color: var(--link-hover);
+    transform: scale(1.05);
+}
+
+.navbar a {
+    text-decoration: none;
+}
+
+.navbar button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.navbar a:hover {
+    color: var(--link-hover);
 }
