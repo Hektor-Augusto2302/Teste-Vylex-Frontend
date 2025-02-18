@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 import { db } from "@/firebase/config";
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { TaskData } from "@/interfaces/ITaskData";
+import { useAuth } from "./useAuth";
 
 export const useTask = () => {
+    const { user } = useAuth();
     const [tasks, setTasks] = useState<TaskData[] | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        if (!user) return;
+
         const fetchTasks = async () => {
             setLoading(true);
             setError(null);
@@ -25,15 +29,15 @@ export const useTask = () => {
         };
 
         fetchTasks();
-    }, []);
+    }, [user]);
 
-    const createTask = async (taskData: Omit<TaskData, "_id">) => {
+    const createTask = async (taskData: Omit<TaskData, "_id" | "userId">, userId: string) => {
         setLoading(true);
         setError(null);
     
         try {
-            const docRef = await addDoc(collection(db, "tasks"), taskData);
-            setTasks([...(tasks || []), { _id: docRef.id, ...taskData }]);
+            const docRef = await addDoc(collection(db, "tasks"), { ...taskData, userId });
+            setTasks([...(tasks || []), { _id: docRef.id, ...taskData, userId }]);
         } catch {
             setError("Erro ao criar tarefa.");
         } finally {

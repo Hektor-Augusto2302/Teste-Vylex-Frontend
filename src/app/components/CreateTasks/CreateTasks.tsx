@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useTask } from "@/hooks/useTask";
+import { useAuth } from "@/hooks/useAuth"; // 🔹 Importa o hook de autenticação
 import { FormContainer, Title, Input, Button, ErrorText } from "@/styles/CreateTasks.styles";
 import { TaskData } from "@/interfaces/ITaskData";
 
 export default function CreateTaskForm() {
     const { createTask, loading, error } = useTask();
-    const [formData, setFormData] = useState<Omit<TaskData, "_id">>({
+    const { user } = useAuth(); // 🔹 Obtém o usuário logado
+    const [formData, setFormData] = useState<Omit<TaskData, "_id" | "userId">>({
         title: "",
         description: "",
     });
@@ -20,7 +22,9 @@ export default function CreateTaskForm() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await createTask(formData);
+        if (!user) return;
+
+        await createTask(formData, user.uid);
         setTaskCreated(true);
     };
 
@@ -53,7 +57,7 @@ export default function CreateTaskForm() {
                     required
                 />
                 {error && <ErrorText>{error}</ErrorText>}
-                <Button type="submit" className="p-3 rounded font-semibold" disabled={loading}>
+                <Button type="submit" className="p-3 rounded font-semibold" disabled={loading || !user}>
                     {loading ? "Criando..." : "Criar Tarefa"}
                 </Button>
             </form>
