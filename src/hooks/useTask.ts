@@ -17,7 +17,7 @@ export const useTask = () => {
                 const querySnapshot = await getDocs(collection(db, "tasks"));
                 const taskList = querySnapshot.docs.map((doc) => ({ _id: doc.id, ...doc.data() })) as TaskData[];
                 setTasks(taskList);
-            } catch (err) {
+            } catch {
                 setError("Erro ao buscar tarefas.");
             } finally {
                 setLoading(false);
@@ -34,7 +34,7 @@ export const useTask = () => {
         try {
             const docRef = await addDoc(collection(db, "tasks"), taskData);
             setTasks([...(tasks || []), { _id: docRef.id, ...taskData }]);
-        } catch (err) {
+        } catch {
             setError("Erro ao criar tarefa.");
         } finally {
             setLoading(false);
@@ -53,7 +53,7 @@ export const useTask = () => {
                     task._id === taskId ? { ...task, ...updatedData } : task
                 ) || []
             );
-        } catch (err) {
+        } catch {
             setError("Erro ao atualizar a tarefa.");
         } finally {
             setLoading(false);
@@ -67,7 +67,7 @@ export const useTask = () => {
         try {
             await deleteDoc(doc(db, "tasks", taskId));
             setTasks(tasks?.filter(task => task._id !== taskId) || []);
-        } catch (err) {
+        } catch {
             setError("Erro ao excluir a tarefa.");
         } finally {
             setLoading(false);

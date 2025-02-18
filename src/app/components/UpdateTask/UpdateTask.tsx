@@ -44,8 +44,8 @@ export default function UpdateTaskForm() {
         try {
             await updateTask(id as string, formData);
             router.push("/");
-        } catch (err) {
-            setError("Erro ao atualizar a tarefa.");
+        } catch {
+            setError("Erro ao buscar tarefas.");
         }
     };
 

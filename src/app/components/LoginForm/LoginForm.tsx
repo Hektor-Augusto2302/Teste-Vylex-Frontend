@@ -29,8 +29,8 @@ export default function LoginForm() {
 
         try {
             await login(formData.email, formData.password);
-        } catch (err) {
-            setError("Credenciais inválidas.");
+        } catch {
+            setError("Erro ao buscar tarefas.");
         }
     };
 
